@@ -2,6 +2,9 @@ import os
 import sys
 from pathlib import Path
 
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import SecretStr
+
 from browser_use.agent.views import ActionResult
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -21,6 +24,17 @@ browser = Browser(
 )
 controller = Controller()
 
+model = ChatGoogleGenerativeAI(
+	api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+	# model="gemini-2.0-flash",
+	use_vision=True,
+	save_conversation_path="logs/conversation",
+	model="gemini-1.5-flash",
+	temperature=0,
+	max_tokens=None,
+	timeout=None,
+	max_retries=2
+)
 
 @controller.registry.action('Copy text to clipboard')
 def copy_to_clipboard(text: str):
@@ -39,8 +53,8 @@ async def paste_from_clipboard(browser: BrowserContext):
 
 
 async def main():
-	task = f'Copy the text "Hello, world!" to the clipboard, then go to google.com and paste the text'
-	model = ChatOpenAI(model='gpt-4o')
+	task = 'Copy the text "Hello, Souvik!" to the clipboard, then go to google.com and paste the text and click in search button'
+	# model = ChatOpenAI(model='gpt-4o')
 	agent = Agent(
 		task=task,
 		llm=model,

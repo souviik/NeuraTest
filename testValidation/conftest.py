@@ -7,6 +7,7 @@ import os
 import sys
 
 import pytest
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
 from pydantic import SecretStr
 
@@ -36,7 +37,19 @@ def llm():
 	api_key = os.getenv('OPENAI_API_KEY')
 	logger.debug(f'API Key present: {bool(api_key)}')
 	logger.debug('Using actual ChatOpenAI model')
-	return ChatOpenAI(model='gpt-4o', api_key=SecretStr(api_key) if api_key else None)
+
+	return ChatGoogleGenerativeAI(
+		api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+		# model="gemini-2.0-flash",
+		use_vision=True,
+		save_conversation_path="logs/conversation",
+		model="gemini-1.5-flash",
+		temperature=0,
+		max_tokens=None,
+		timeout=None,
+		max_retries=2
+	)
+	# return ChatOpenAI(model='gpt-4o', api_key=SecretStr(api_key) if api_key else None)
 
 
 @pytest.fixture(scope='session')
@@ -45,7 +58,7 @@ def browser():
 	Fixture to provide a Browser instance for testing.
 	"""
 	logger.debug('Creating Browser instance for testing')
-	return Browser(config=BrowserConfig(headless=True, disable_security=True))
+	return Browser(config=BrowserConfig(headless=False, disable_security=True))
 
 
 @pytest.fixture(scope='function')

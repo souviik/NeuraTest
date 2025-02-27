@@ -3,6 +3,7 @@ import os
 import sys
 
 import requests
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -10,12 +11,22 @@ import asyncio
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 
 from browser_use import ActionResult, Agent, Controller
 
 load_dotenv()
-
+model = ChatGoogleGenerativeAI(
+	api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+	# model="gemini-2.0-flash",
+	use_vision=True,
+	save_conversation_path="logs/conversation",
+	model="gemini-1.5-flash",
+	temperature=0,
+	max_tokens=None,
+	timeout=None,
+	max_retries=2
+)
 
 class Person(BaseModel):
 	name: str
@@ -79,7 +90,7 @@ names = [
 async def main():
 	task = 'use search_web with "find email address of the following ETH professor:" for each of the following persons in a list of actions. Finally return the list with name and email if provided'
 	task += '\n' + '\n'.join(names)
-	model = ChatOpenAI(model='gpt-4o')
+	# model = ChatOpenAI(model='gpt-4o')
 	agent = Agent(task=task, llm=model, controller=controller, max_actions_per_step=20)
 
 	history = await agent.run()

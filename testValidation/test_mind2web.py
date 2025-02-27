@@ -63,11 +63,22 @@ def llm():
 	"""Initialize language model for testing"""
 
 	# return ChatAnthropic(model_name='claude-3-5-sonnet-20240620', timeout=25, stop=None)
-	return AzureChatOpenAI(
-		model='gpt-4o',
-		api_version='2024-10-21',
-		azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', ''),
-		api_key=SecretStr(os.getenv('AZURE_OPENAI_KEY', '')),
+	# return AzureChatOpenAI(
+	# 	model='gpt-4o',
+	# 	api_version='2024-10-21',
+	# 	azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', ''),
+	# 	api_key=SecretStr(os.getenv('AZURE_OPENAI_KEY', '')),
+	# )
+	return ChatGoogleGenerativeAI(
+		api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+		# model="gemini-2.0-flash",
+		use_vision=True,
+		save_conversation_path="logs/conversation",
+		model="gemini-1.5-flash",
+		temperature=0,
+		max_tokens=None,
+		timeout=None,
+		max_retries=2
 	)
 
 

@@ -134,7 +134,7 @@ class Browser:
 
 		try:
 			# Check if browser is already running
-			response = requests.get('http://localhost:9222/json/version', timeout=2)
+			response = requests.get('http://localhost:9222/json/version', timeout=2, verify=False)
 			if response.status_code == 200:
 				logger.info('Reusing existing Chrome instance')
 				browser = await playwright.chromium.connect_over_cdp(

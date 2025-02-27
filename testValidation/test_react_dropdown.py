@@ -7,6 +7,9 @@ Simple try of the agent.
 import os
 import sys
 
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import SecretStr
+
 from browser_use.browser.browser import Browser, BrowserConfig
 from browser_use.browser.context import BrowserContext
 
@@ -17,7 +20,18 @@ from langchain_openai import ChatOpenAI
 
 from browser_use import Agent, AgentHistoryList
 
-llm = ChatOpenAI(model='gpt-4o')
+# llm = ChatOpenAI(model='gpt-4o')
+llm =  ChatGoogleGenerativeAI(
+	api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+	# model="gemini-2.0-flash",
+	use_vision=True,
+	save_conversation_path="logs/conversation",
+	model="gemini-1.5-flash",
+	temperature=0,
+	max_tokens=None,
+	timeout=None,
+	max_retries=2
+)
 # browser = Browser(config=BrowserConfig(headless=False))
 
 agent = Agent(

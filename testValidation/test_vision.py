@@ -9,7 +9,10 @@ import sys
 from pprint import pprint
 
 import pytest
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import SecretStr
 
+from AIAgentTests.browser.using_cdp import controller
 from browser_use.browser.browser import Browser, BrowserConfig
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -18,9 +21,20 @@ from langchain_openai import ChatOpenAI
 
 from browser_use import Agent, AgentHistoryList, Controller
 
-llm = ChatOpenAI(model='gpt-4o')
-controller = Controller()
+# llm = ChatOpenAI(model='gpt-4o')
+# controller = Controller()
 
+llm = ChatGoogleGenerativeAI(
+	api_key=SecretStr(os.getenv('GEMINI_API_KEY')),
+	# model="gemini-2.0-flash",
+	use_vision=True,
+	save_conversation_path="logs/conversation",
+	model="gemini-1.5-flash",
+	temperature=0,
+	max_tokens=None,
+	timeout=None,
+	max_retries=2
+)
 # use this test to ask the model questions about the page like
 # which color do you see for bbox labels, list all with their label
 # whats the smallest bboxes with labels and

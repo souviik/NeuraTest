@@ -126,7 +126,7 @@ https://github.com/user-attachments/assets/de73ee39-432c-4b97-b4e8-939fd7f323b3
 
 ## More examples
 
-For more examples see the [examples](examples) folder or join the [Discord](https://link.browser-use.com/discord) and show off your project.
+For more examples see the [examples](AIAgentTests) folder or join the [Discord](https://link.browser-use.com/discord) and show off your project.
 
 # Vision
 
